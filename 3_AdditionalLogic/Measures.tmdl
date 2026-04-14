@@ -1,0 +1,62 @@
+createOrReplace
+
+	ref table 'Fact Car Consumptions'
+
+		measure 'Avg. Battery Temperature' = AVERAGE('Fact Car Consumptions'[BatteryTemperature])
+			formatString: #,0.00
+			lineageTag: 86d5ae87-7b63-4219-bef9-f12274fc711a
+
+		measure 'Max Detected Devices' = MAX('Fact Car Consumptions'[CountOfNewDetectedCars])
+			formatString: #,0
+			lineageTag: fb8ae9c1-43f1-4616-881c-2049f3699b83
+
+		measure 'System Alerts' = SUM('Fact Car Consumptions'[CriticalSystemAlert])
+			formatString: #,0
+			lineageTag: 5689696f-d26e-4c14-9097-7d0525ead661
+
+		measure 'Total Driven Kilometers' = SUM('Fact Car Consumptions'[DrivenKilometers])
+			formatString: #,0
+			lineageTag: 17bb2f41-bbcd-4434-a282-a60f7e87de0e
+
+	ref table 'Fact Car Software Installs'
+
+		measure 'Monthly Software Install Growth' =
+				DIVIDE(
+				    SUM('Fact Car Software Installs'[InstallationCount])-[Software Install Last Period],
+				    [Software Install Last Period]
+				    )
+			formatString: 0.00\ %;-0.00\ %;0.00\ %
+			lineageTag: 1d4f4000-c5ad-4aae-9ff7-d81855ccd3f8
+
+		measure 'Software Install' = SUM('Fact Car Software Installs'[InstallationCount])
+			formatString: #,0
+			lineageTag: 0c86cde8-7693-4482-aff4-c3285f7452eb
+
+		measure 'Software Install 30d' =
+				
+				CALCULATE(
+				    SUM('Fact Car Software Installs'[InstallationCount]),
+				    'Dim Calendar'[IsLast30Days] = 1
+				    )
+			formatString: #,0
+			lineageTag: 8003ab37-59cc-4140-b7f6-9c3b2537e975
+
+		measure 'Software Install 90d' =
+				
+				CALCULATE(
+				    SUM('Fact Car Software Installs'[InstallationCount]),
+				    'Dim Calendar'[IsLast90Days] = 1
+				    )
+			formatString: #,0
+			lineageTag: 074cdbfd-59ac-46a0-92ee-88fe7f9adceb
+
+		measure 'Software Install Last Period' =
+				
+				// Calculate the Software Installation Count for the relative last month
+				CALCULATE(
+				    SUM('Fact Car Software Installs'[InstallationCount]),
+				    PARALLELPERIOD('Dim Calendar'[Date], -1, MONTH)
+				)
+			formatString: 0
+			lineageTag: 11d0cb67-db2a-4128-8529-637a3b885ebd
+
