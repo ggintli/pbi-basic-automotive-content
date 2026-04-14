@@ -3,13 +3,6 @@ createOrReplace
 
 	ref table 'Dim Calendar'
 
-		column IsLast30Days = IF('Dim Calendar'[Date] > TODAY()-30, 1, 0)
-			formatString: 0
-			lineageTag: 9c3c1e4a-492d-41a3-98a1-d48593c54662
-			summarizeBy: sum
-
-			annotation SummarizationSetBy = Automatic
-
 		column Year = FORMAT('Dim Calendar'[Date], "yyyy")
 			lineageTag: 9f1e0c82-e324-4ce4-93dc-d12256ec349b
 			summarizeBy: none
@@ -39,5 +32,13 @@ createOrReplace
 			formatString: 0
 			lineageTag: f50a3213-e731-4206-8d70-215a227e4e44
 			summarizeBy: none
+
+			annotation SummarizationSetBy = Automatic
+
+
+		column IsLast30Days = IF('Dim Calendar'[Date] > TODAY()-30, 1, 0)
+			formatString: 0
+			lineageTag: 9c3c1e4a-492d-41a3-98a1-d48593c54662
+			summarizeBy: sum
 
 			annotation SummarizationSetBy = Automatic
